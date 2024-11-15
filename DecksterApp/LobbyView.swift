@@ -2,7 +2,8 @@ import SwiftUI
 import DecksterLib
 
 struct LobbyView: View {
-    @State private var viewModel: ViewModel?
+    @State private var viewModel: ViewModel
+    @Environment(\.openWindow) var openWindow
 
     init(game: Endpoint, configuration: Configuration) {
         viewModel = ViewModel(
@@ -26,7 +27,13 @@ struct LobbyView: View {
             .padding(.top)
 
             Button("Create game") {
-
+                Task {
+                    if let createdGame = await viewModel.createGame() {
+                        // Navigate
+                    } else {
+                        // Show error
+                    }
+                }
             }
             .padding()
         }
@@ -38,14 +45,26 @@ extension LobbyView {
     class ViewModel {
         let game: Endpoint
         let configuration: Configuration
+        private let lobbyClient: LobbyClient
 
         init(game: Endpoint, configuration: Configuration) {
             self.game = game
             self.configuration = configuration
+            lobbyClient = LobbyClient(
+                hostname: configuration.host,
+                accessToken: configuration.userModel.accessToken
+            )
         }
 
-        func createGame() async {
-
+        func createGame() async -> GameCreated? {
+            do {
+                let createdGame = try await lobbyClient.createGame(game: game)
+                print(createdGame)
+                return createdGame
+            } catch {
+                print(error)
+            }
+            return nil
         }
     }
 }

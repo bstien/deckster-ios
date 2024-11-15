@@ -5,8 +5,8 @@ struct LoginView: View {
     @State private var viewModel = ViewModel()
 
     var body: some View {
-        if let userModel = viewModel.userModel {
-            Text(userModel.username + " is logged in")
+        if let configuration = viewModel.configuration {
+            LobbyView(game: .chatroom, configuration: configuration)
         } else {
             VStack {
                 TextField("Username", text: $viewModel.username)
@@ -30,18 +30,22 @@ extension LoginView {
         var password: String = "asdf"
         var host: String = "localhost:13992"
         var errorMessage: String?
-        var userModel: UserModel?
+        var configuration: Configuration?
 
         func login() async {
             let loginClient = LoginClient(hostname: host)
             print(host)
             do {
                 let userModel = try await loginClient.login(username: username, password: password)
-                self.userModel = userModel
-                print(userModel)
+                let configuration = Configuration(
+                    host: host,
+                    userModel: userModel
+                )
+                self.configuration = configuration
+                print(configuration)
             } catch {
-                print(error)
                 errorMessage = error.localizedDescription
+                print(error)
             }
         }
     }
