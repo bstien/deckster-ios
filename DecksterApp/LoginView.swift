@@ -26,9 +26,9 @@ struct LoginView: View {
 extension LoginView {
     @Observable
     class ViewModel {
-        var username: String = "asdf"
-        var password: String = "asdf"
-        var host: String = "localhost:13992"
+        var username: String = "Otzi"
+        var password: String = "1234"
+        var host: String = "192.168.0.134:13992"
         var errorMessage: String?
         var userConfig: UserConfig?
 

@@ -1,6 +1,8 @@
 import SwiftUI
 import DecksterLib
 
+let name = "Otzi"
+
 struct ChatroomView: View {
     @State private var viewModel: ViewModel
 
@@ -9,11 +11,15 @@ struct ChatroomView: View {
     }
 
     var body: some View {
-        // Use `ChatView` here
-        Text("Hey")
-            .onAppear {
-                Task { await viewModel.connect() }
+        ChatView(
+            messageToSend: $viewModel.messageToSend,
+            messages: viewModel.messages,
+            sendMessageTapped: viewModel.sendMessage)
+        .onAppear() {
+            Task {
+                await viewModel.connect()
             }
+        }
     }
 }
 
@@ -24,9 +30,12 @@ extension ChatroomView {
         let client: Chatroom.Client
         var notificationTask: Task<Void, Never>?
         var errorMessage: String?
+        var messageToSend: String = ""
+        var messages: [ChatMessage] = []
 
         init(gameConfig: GameConfig) {
             self.gameConfig = gameConfig
+            
             client = Chatroom.Client(
                 hostname: gameConfig.userConfig.host,
                 gameId: gameConfig.gameId,
@@ -43,7 +52,14 @@ extension ChatroomView {
                         for try await notification in client.notificationStream {
                             switch notification {
                             case .message(let message):
-                                print(message)
+                                print("New message: \(message)")
+                                let message = ChatMessage(
+                                    isYou: message.sender == "d1dfd303-c158-4dfa-b8ee-b4ffc546042d",
+                                    sender: message.sender,
+                                    body: message.message
+                                )
+                                messages.append(message)
+                                messageToSend = ""
                             }
                         }
                     } catch {
@@ -54,21 +70,15 @@ extension ChatroomView {
                 print(error)
             }
         }
+        
+        func sendMessage(message: String) {
+            Task {
+                do {
+                    try await client.send(message: message)
+                } catch {
+                    errorMessage = "Could not send message: \(error)"
+                }
+            }
+        }
     }
-}
-
-#Preview {
-    ChatroomView(
-        gameConfig: GameConfig(
-            game: .chatroom,
-            gameId: "transitiv seng",
-            userConfig: UserConfig(
-                host: "localhost:13992",
-                userModel: UserModel(
-                    username: "asdf",
-                    accessToken: "91e8cf5a891f4f98b2fc6f6804ec66bf19f2921dbc274b908ed1f008f1f97728"
-                )
-            )
-        )
-    )
 }
