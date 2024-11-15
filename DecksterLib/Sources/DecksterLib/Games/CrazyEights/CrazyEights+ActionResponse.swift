@@ -5,6 +5,7 @@ extension CrazyEights {
         case empty
         case card(Card)
         case viewOfGame(GameView)
+        case error(String)
 
         enum CodingKeys: String, CodingKey {
             case kind = "type"
@@ -12,9 +13,14 @@ extension CrazyEights {
 
         public init(from decoder: any Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
-            let kind = try container.decode(Kind.self, forKey: .kind)
+            let response = try container.decode(DecksterResponse<Kind>.self, forKey: .kind)
 
-            switch kind {
+            if let error = response.error {
+                self = .error(error)
+                return
+            }
+
+            switch response.kind {
             case .card:
                 self = .card(try CardResponse(from: decoder).card)
             case .empty:

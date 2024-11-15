@@ -7,6 +7,7 @@ extension Idiot {
         case pullIn(cards: [Card])
         case drawCards(cards: [Card])
         case putBlindCard(attemptedCard: Card, pullInCards: [Card])
+        case error(String)
 
         enum CodingKeys: String, CodingKey {
             case kind = "type"
@@ -14,9 +15,14 @@ extension Idiot {
 
         public init(from decoder: any Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
-            let kind = try container.decode(Kind.self, forKey: .kind)
+            let response = try container.decode(DecksterResponse<Kind>.self, forKey: .kind)
 
-            switch kind {
+            if let error = response.error {
+                self = .error(error)
+                return
+            }
+
+            switch response.kind {
             case .empty:
                 self = .empty
             case .swapCards:
