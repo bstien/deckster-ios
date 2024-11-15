@@ -9,12 +9,11 @@ struct YourCardsView: View {
             HStack {
                 ForEach(cards, id: \.self) { card in
                     YourCardView(card: card)
-                        .transition(.move(edge: .bottom))
                 }
             }
             .padding(.bottom, -12)
         }
-        .animation(.spring(), value: cards)
+        .animation(.easeInOut, value: cards)
     }
 }
 
