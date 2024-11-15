@@ -1,6 +1,7 @@
 import Foundation
+import SwiftUI
 
-public struct Card: Codable {
+public struct Card: Codable, Hashable {
     public typealias Rank = Int
 
     public let rank: Rank
@@ -40,12 +41,19 @@ extension Card {
         case hearts
         case spades
 
-        var stringValue: String {
+        public var stringValue: String {
             switch self {
             case .clubs: return "♣"
             case .diamonds: return "♦"
             case .hearts: return "♥"
             case .spades: return "♠"
+            }
+        }
+
+        public var color: Color {
+            switch self {
+            case .clubs, .spades: .black
+            case .diamonds, .hearts: .red
             }
         }
     }
