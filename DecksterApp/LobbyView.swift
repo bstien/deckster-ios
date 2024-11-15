@@ -29,7 +29,7 @@ struct LobbyView: View {
             Button("Create game") {
                 Task {
                     if let createdGame = await viewModel.createGame() {
-                        // Navigate
+                        openWindow(value: createdGame)
                     } else {
                         // Show error
                     }
