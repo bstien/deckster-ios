@@ -5,13 +5,19 @@ struct YourCardsView: View {
     let cards: [Card]
 
     var body: some View {
-        ScrollView(.horizontal) {
-            HStack {
-                ForEach(cards, id: \.self) { card in
-                    CardView(card: card)
+        ZStack {
+            CardView(card: Card(rank: 1, suit: .clubs))
+                .padding(.bottom, -12)
+                .opacity(0)
+
+            ScrollView(.horizontal) {
+                HStack {
+                    ForEach(cards, id: \.self) { card in
+                        CardView(card: card)
+                    }
                 }
+                .padding(.bottom, -12)
             }
-            .padding(.bottom, -12)
         }
         .animation(.easeInOut, value: cards)
     }
