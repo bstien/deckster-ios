@@ -5,5 +5,5 @@ public struct Player: Decodable, Identifiable {
     public let name: String
     public let points: Int
     public let cardsInHand: Int
-    public let interestingFacts: [String: String]
+    public let interestingFacts: [String: String]?
 }

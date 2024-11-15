@@ -17,12 +17,43 @@ struct LobbyView: View {
             HStack {
                 VStack {
                     Text("Ongoing games")
-                    List {}
+                        .font(.title3)
+                    ScrollView {
+                        VStack(spacing: 10) {
+                            ForEach(viewModel.activeGames) { activeGame in
+                                VStack(alignment: .leading) {
+                                    HStack(alignment: .firstTextBaseline) {
+                                        Text(activeGame.name)
+                                            .bold()
+                                        Spacer()
+                                        Text(activeGame.state.rawValue)
+                                            .font(.callout)
+                                            .foregroundStyle(.secondary)
+                                            .italic()
+                                    }
+                                    Text("\(activeGame.players.count) players")
+                                }
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .onTapGesture {
+                                    let gameConfig = GameConfig(
+                                        game: viewModel.game,
+                                        gameId: activeGame.name,
+                                        userConfig: viewModel.userConfig
+                                    )
+                                    openWindow(value: gameConfig)
+                                }
+                            }
+                        }
+                        .padding(.horizontal)
+                    }
                 }
+                .frame(maxWidth: .infinity)
                 VStack {
                     Text("Ended games")
+                        .font(.title3)
                     List {}
                 }
+                .frame(maxWidth: .infinity)
             }
             .padding(.top)
 
@@ -36,6 +67,12 @@ struct LobbyView: View {
                 }
             }
             .padding()
+            .task {
+                while !Task.isCancelled {
+                    await viewModel.fetchGames()
+                    try? await Task.sleep(for: .seconds(1))
+                }
+            }
         }
     }
 }
@@ -45,6 +82,7 @@ extension LobbyView {
     class ViewModel {
         let game: Endpoint
         let userConfig: UserConfig
+        var activeGames = [DecksterGame]()
         private let lobbyClient: LobbyClient
 
         init(game: Endpoint, userConfig: UserConfig) {
@@ -70,6 +108,14 @@ extension LobbyView {
                 print(error)
             }
             return nil
+        }
+
+        func fetchGames() async {
+            do {
+                activeGames = try await lobbyClient.getActiveGames()
+            } catch {
+                print(error)
+            }
         }
     }
 }
