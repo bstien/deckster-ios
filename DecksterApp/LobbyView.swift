@@ -52,13 +52,14 @@ extension LobbyView {
             self.userConfig = userConfig
             lobbyClient = LobbyClient(
                 hostname: userConfig.host,
+                game: game,
                 accessToken: userConfig.userModel.accessToken
             )
         }
 
         func createGame() async -> GameConfig? {
             do {
-                let createdGame = try await lobbyClient.createGame(game: game, name: "langsom avstand")
+                let createdGame = try await lobbyClient.createGame(name: "langsom avstand")
                 print(createdGame)
                 return GameConfig(
                     game: game,
