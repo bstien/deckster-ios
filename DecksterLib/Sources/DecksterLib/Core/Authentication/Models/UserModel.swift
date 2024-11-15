@@ -1,6 +1,6 @@
 import Foundation
 
-public struct UserModel: Decodable {
+public struct UserModel: Codable, Hashable {
     public let username: String
     public let accessToken: String
 
