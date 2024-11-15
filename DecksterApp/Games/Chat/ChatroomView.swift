@@ -14,7 +14,8 @@ struct ChatroomView: View {
         ChatView(
             messageToSend: $viewModel.messageToSend,
             messages: viewModel.messages,
-            sendMessageTapped: viewModel.sendMessage)
+            sendMessageTapped: viewModel.sendMessage
+        )
         .onAppear() {
             Task {
                 await viewModel.connect()

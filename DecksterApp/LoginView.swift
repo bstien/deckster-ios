@@ -6,7 +6,9 @@ struct LoginView: View {
 
     var body: some View {
         if let userConfig = viewModel.userConfig {
-            LobbyView(game: .chatroom, userConfig: userConfig)
+            GameSelectorView(
+                userConfig: userConfig
+            )
         } else {
             VStack {
                 TextField("Username", text: $viewModel.username)
