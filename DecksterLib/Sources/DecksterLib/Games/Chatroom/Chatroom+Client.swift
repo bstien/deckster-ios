@@ -4,8 +4,8 @@ public enum Chatroom {}
 
 extension Chatroom {
     public class Client: GameClient<Action, ActionResponse, Notification> {
-        public init(hostname: String, gameId: String, accessToken: String) throws {
-            try super.init(
+        public init(hostname: String, gameId: String, accessToken: String) {
+            super.init(
                 hostname: hostname,
                 gameName: "chatroom",
                 gameId: gameId,
