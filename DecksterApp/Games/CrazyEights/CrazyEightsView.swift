@@ -40,6 +40,7 @@ extension CrazyEightsView {
             userConfig: UserConfig(
                 host: "localhost:13992",
                 userModel: UserModel(
+                    id: "1234",
                     username: "asdf",
                     accessToken: "a400a47dfd19457a823d854a90bcfc126de29624c56f40f7ac113004fed9a7ea"
                 )

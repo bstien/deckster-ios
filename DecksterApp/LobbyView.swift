@@ -77,6 +77,7 @@ extension LobbyView {
     let userConfig = UserConfig(
         host: "localhost:13992",
         userModel: UserModel(
+            id: "1234",
             username: "asdf",
             accessToken: "91e8cf5a891f4f98b2fc6f6804ec66bf19f2921dbc274b908ed1f008f1f97728"
         )
