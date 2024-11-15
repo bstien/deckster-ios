@@ -53,7 +53,7 @@ public class GameClient<Action: Encodable, ActionResponse: Decodable, Notificati
         gameId: String,
         accessToken: String,
         urlSession: URLSession = .shared
-    ) throws {
+    ) {
         self.hostname = hostname
         self.gameName = gameName
         self.gameId = gameId
@@ -61,7 +61,7 @@ public class GameClient<Action: Encodable, ActionResponse: Decodable, Notificati
         self.urlSession = urlSession
 
         let urlString = "ws://\(hostname)/\(gameName)/join/\(gameId)"
-        let urlRequest = try URLRequest.create(urlString, accessToken: accessToken)
+        let urlRequest = try! URLRequest.create(urlString, accessToken: accessToken)
         self.actionSocket = WebSocketConnection(urlRequest: urlRequest, urlSession: urlSession)
     }
 
