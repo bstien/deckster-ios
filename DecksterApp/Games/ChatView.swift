@@ -9,18 +9,33 @@ struct ChatView: View {
 
     var body: some View {
         VStack {
-            List {
+            ScrollView {
                 ForEach(messages, id: \.self) { message in
-                    
+                    VStack(alignment: message.isYou ? .trailing : .leading) {
+                        Text(message.sender)
+                            .padding(0)
+                        Text(message.body)
+                            .frame(alignment: message.isYou ? .trailing : .leading)
+                            .multilineTextAlignment(message.isYou ? .trailing : .leading)
+                            .padding()
+                            .background(message.isYou ? .green : .blue)
+                            .clipShape(.rect(cornerRadius: 7))
+                            
+                    }
+                    .frame(maxWidth: .infinity, alignment: message.isYou ? .trailing : .leading)
+                    .padding([.leading, .top, .trailing])
                 }
+                .padding(.top)
+                .frame(maxWidth: .infinity)
             }
+            
             HStack {
                 TextField("Message", text: $messageToSend)
 
                 Button("Send") {
                     sendMessageTapped(messageToSend)
                 }
-            }
+            }.padding(.horizontal)
         }
     }
 }
@@ -45,7 +60,7 @@ struct ChatView: View {
         sendMessageTapped: { message in
             print(message)
             messages.append(.init(isYou: true, sender: "Me", body: message))
-            messageToSend = ""
+            messageToSend = "Hei"
         }
     )
 }
