@@ -13,29 +13,29 @@ extension Uno {
 }
 
 extension Uno.Card {
-    public enum Value: Int, Codable {
-        case zero = 0
-        case one = 1
-        case two = 2
-        case three = 3
-        case four = 4
-        case five = 5
-        case six = 6
-        case seven = 7
-        case eight = 8
-        case nine = 9
-        case skip = 21
-        case reverse = 22
-        case drawTwo = 23
-        case wild = 51
-        case wildDrawFour = 52
+    public enum Value: String, Codable {
+        case zero = "Zero" // 0
+        case one = "One" // 1
+        case two = "Two" // 2
+        case three = "Three" // 3
+        case four = "Four" // 4
+        case five = "Five" // 5
+        case six = "Six" // 6
+        case seven = "Seven" // 7
+        case eight = "Eight" // 8
+        case nine = "Nine" // 9
+        case skip = "Skip" // 21
+        case reverse = "Reverse" // 22
+        case drawTwo = "DrawTwo" // 23
+        case wild = "Wild" // 51
+        case wildDrawFour = "WildDrawFour" // 52
     }
 
     public enum Color: String, Codable {
-        case red
-        case yellow
-        case green
-        case blue
-        case wild
+        case red = "Red"
+        case yellow = "Yellow"
+        case green = "Green"
+        case blue = "Blue"
+        case wild = "Wild"
     }
 }
