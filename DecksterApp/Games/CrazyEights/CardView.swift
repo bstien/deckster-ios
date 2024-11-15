@@ -1,7 +1,7 @@
 import SwiftUI
 import DecksterLib
 
-struct YourCardView: View {
+struct CardView: View {
     let card: Card
 
     var body: some View {
@@ -24,7 +24,7 @@ struct YourCardView: View {
 }
 
 #Preview {
-    YourCardView(
+    CardView(
         card: Card(rank: 11, suit: .hearts)
     )
     .padding()

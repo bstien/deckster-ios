@@ -8,7 +8,7 @@ struct YourCardsView: View {
         ScrollView(.horizontal) {
             HStack {
                 ForEach(cards, id: \.self) { card in
-                    YourCardView(card: card)
+                    CardView(card: card)
                 }
             }
             .padding(.bottom, -12)
