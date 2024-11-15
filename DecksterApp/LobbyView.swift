@@ -58,7 +58,7 @@ extension LobbyView {
 
         func createGame() async -> GameConfig? {
             do {
-                let createdGame = try await lobbyClient.createGame(game: game, name: "langsom avstand")
+                let createdGame = try await lobbyClient.createGame(game: game, name: "glatt krokodille")
                 print(createdGame)
                 return GameConfig(
                     game: game,
