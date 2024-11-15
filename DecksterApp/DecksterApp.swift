@@ -10,16 +10,18 @@ struct DecksterApp: App {
         }
 
         WindowGroup(for: GameConfig.self) { $gameConfig in
-            switch gameConfig?.game {
-            case .chatroom:
-                Text("Chatroom")
-            case .uno:
-                Text("Uno")
-            case .crazyEights:
-                Text("Crazy Eights")
-            case .idiot:
-                Text("Idiot")
-            case .none:
+            if let gameConfig {
+                switch gameConfig.game {
+                case .chatroom:
+                    ChatroomView(gameConfig: gameConfig)
+                case .uno:
+                    Text("Uno")
+                case .crazyEights:
+                    Text("Crazy Eights")
+                case .idiot:
+                    Text("Idiot")
+                }
+            } else {
                 Text("No Game")
             }
         }
