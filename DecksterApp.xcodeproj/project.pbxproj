@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		8264B8BA2CE74AED007EB0EC /* DecksterLib in Frameworks */ = {isa = PBXBuildFile; productRef = 8264B8B92CE74AED007EB0EC /* DecksterLib */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		8264B89C2CE73C3B007EB0EC /* DecksterApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DecksterApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -23,6 +27,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8264B8BA2CE74AED007EB0EC /* DecksterLib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -33,6 +38,7 @@
 			isa = PBXGroup;
 			children = (
 				8264B89E2CE73C3B007EB0EC /* DecksterApp */,
+				8264B8B82CE74AED007EB0EC /* Frameworks */,
 				8264B89D2CE73C3B007EB0EC /* Products */,
 			);
 			sourceTree = "<group>";
@@ -43,6 +49,13 @@
 				8264B89C2CE73C3B007EB0EC /* DecksterApp.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		8264B8B82CE74AED007EB0EC /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -65,6 +78,7 @@
 			);
 			name = DecksterApp;
 			packageProductDependencies = (
+				8264B8B92CE74AED007EB0EC /* DecksterLib */,
 			);
 			productName = DecksterApp;
 			productReference = 8264B89C2CE73C3B007EB0EC /* DecksterApp.app */;
@@ -319,6 +333,13 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		8264B8B92CE74AED007EB0EC /* DecksterLib */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = DecksterLib;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 8264B8942CE73C3B007EB0EC /* Project object */;
 }
