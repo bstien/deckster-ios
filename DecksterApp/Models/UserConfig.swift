@@ -1,7 +1,7 @@
 import Foundation
 import DecksterLib
 
-struct Configuration {
+struct UserConfig {
     let host: String
     let userModel: UserModel
 }

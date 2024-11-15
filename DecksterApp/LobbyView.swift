@@ -5,10 +5,10 @@ struct LobbyView: View {
     @State private var viewModel: ViewModel
     @Environment(\.openWindow) var openWindow
 
-    init(game: Endpoint, configuration: Configuration) {
+    init(game: Endpoint, userConfig: UserConfig) {
         viewModel = ViewModel(
             game: game,
-            configuration: configuration
+            userConfig: userConfig
         )
     }
 
@@ -44,15 +44,15 @@ extension LobbyView {
     @Observable
     class ViewModel {
         let game: Endpoint
-        let configuration: Configuration
+        let userConfig: UserConfig
         private let lobbyClient: LobbyClient
 
-        init(game: Endpoint, configuration: Configuration) {
+        init(game: Endpoint, userConfig: UserConfig) {
             self.game = game
-            self.configuration = configuration
+            self.userConfig = userConfig
             lobbyClient = LobbyClient(
-                hostname: configuration.host,
-                accessToken: configuration.userModel.accessToken
+                hostname: userConfig.host,
+                accessToken: userConfig.userModel.accessToken
             )
         }
 
@@ -70,7 +70,7 @@ extension LobbyView {
 }
 
 #Preview {
-    let configuration = Configuration(
+    let userConfig = UserConfig(
         host: "localhost:13992",
         userModel: UserModel(
             username: "asdf",
@@ -79,6 +79,6 @@ extension LobbyView {
     )
     LobbyView(
         game: .chatroom,
-        configuration: configuration
+        userConfig: userConfig
     )
 }
