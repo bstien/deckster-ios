@@ -24,6 +24,13 @@ public final class LobbyClient {
         let (data, _) = try await urlSession.data(for: urlRequest)
         return try JSONDecoder().decode(GameCreated.self, from: data)
     }
+
+    public func getActiveGames() async throws -> [DecksterGame] {
+        let urlString = "http://\(hostname)/\(game.rawValue)/games"
+        let urlRequest = try URLRequest.create(urlString, accessToken: accessToken)
+        let (data, _) = try await urlSession.data(for: urlRequest)
+        return try JSONDecoder().decode([DecksterGame].self, from: data)
+    }
 }
 
 public struct GameCreated: Decodable {
