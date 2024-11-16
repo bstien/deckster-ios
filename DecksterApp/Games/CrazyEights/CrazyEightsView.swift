@@ -10,15 +10,32 @@ struct CrazyEightsView: View {
 
     var body: some View {
         VStack {
-            CrazyEightsPlaymat(
-                currentSuit: viewModel.currentSuit,
-                topCard: viewModel.topCard
-            )
-            .frame(maxHeight: .infinity)
+            HStack {
+                CrazyEightsOtherPlayersView(otherPlayers: viewModel.otherPlayers)
+                    .padding()
+                    .frame(width: 200, alignment: .leading)
+
+                CrazyEightsPlaymat(
+                    currentSuit: viewModel.currentSuit,
+                    topCard: viewModel.topCard
+                )
+                .frame(maxWidth: .infinity)
+
+                Text("PLACEHOLDER")
+                    .padding()
+                    .frame(width: 200, alignment: .trailing)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+
+            Text(viewModel.errorMessage ?? "")
+                .foregroundColor(.red)
+                .padding()
 
             HStack {
                 Button("Pass turn") { viewModel.sendAction(.pass) }
+                    .disabled(!viewModel.itIsYourTurn)
                 Button("Draw card") { viewModel.sendAction(.drawCard) }
+                    .disabled(!viewModel.itIsYourTurn)
             }
 
             Divider()
@@ -31,7 +48,7 @@ struct CrazyEightsView: View {
                 )
                 .overlay {
                     Rectangle().foregroundStyle(
-                        viewModel.itIsYourTurn ? .clear : .gray.opacity(0.2)
+                        viewModel.itIsYourTurn ? .clear : .gray.opacity(0.8)
                     )
                 }
                 .padding([.leading, .trailing, .top])
@@ -76,6 +93,8 @@ extension CrazyEightsView {
         var currentSuit: Card.Suit?
         var yourCards = [Card]()
         var topCard: Card?
+        var errorMessage: String?
+        var otherPlayers: [CrazyEights.OtherPlayer] = []
 
         init(gameConfig: GameConfig) {
             self.gameConfig = gameConfig
@@ -118,12 +137,10 @@ extension CrazyEightsView {
         }
 
         func sendAction(_ action: CrazyEights.Action) {
-            crazyEightCard = nil
             Task {
                 do {
                     let response = try await client.sendAction(action)
                     handleResponse(response)
-                    itIsYourTurn = false
                 } catch {
                     print(error)
                 }
@@ -145,6 +162,7 @@ extension CrazyEightsView {
             case .gameStarted(let _, let viewOfGame):
                 setGameView(viewOfGame)
             case .itsYourTurn(let viewOfGame):
+                errorMessage = nil
                 itIsYourTurn = true
                 setGameView(viewOfGame)
             case .playerDrewCard(let playerId):
@@ -162,15 +180,21 @@ extension CrazyEightsView {
         }
 
         private func handleResponse(_ actionResponse: CrazyEights.ActionResponse) {
+            itIsYourTurn = false
+            crazyEightCard = nil
+            errorMessage = nil
+
             switch actionResponse {
             case .empty:
                 break
             case .card(let card):
                 yourCards.append(card)
             case .viewOfGame(let gameView):
+                itIsYourTurn = true
                 setGameView(gameView)
-            case .error(let string):
-                print(string)
+            case .error(let errorMessage):
+                self.errorMessage = errorMessage
+                print(errorMessage)
             }
         }
 
@@ -178,6 +202,7 @@ extension CrazyEightsView {
             currentSuit = gameView.currentSuit
             topCard = gameView.topOfPile
             yourCards = gameView.cards
+            otherPlayers = gameView.otherPlayers
         }
     }
 }
