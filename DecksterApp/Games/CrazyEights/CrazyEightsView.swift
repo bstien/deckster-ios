@@ -15,11 +15,16 @@ struct CrazyEightsView: View {
                     .padding()
                     .frame(width: 200, alignment: .leading)
 
-                CrazyEightsPlaymat(
-                    currentSuit: viewModel.currentSuit,
-                    topCard: viewModel.topCard
-                )
-                .frame(maxWidth: .infinity)
+                VStack(spacing: 20) {
+                    Text(viewModel.currentPlayer ?? "")
+                        .font(.largeTitle)
+
+                    CrazyEightsPlaymat(
+                        currentSuit: viewModel.currentSuit,
+                        topCard: viewModel.topCard
+                    )
+                    .frame(maxWidth: .infinity)
+                }
 
                 LogView(messages: viewModel.logMessages)
                     .padding()
@@ -91,6 +96,7 @@ extension CrazyEightsView {
         var errorMessage: String?
         var otherPlayers: [CrazyEights.OtherPlayer] = []
         var logMessages: [LogMessage] = []
+        var currentPlayer: String?
 
         init(gameConfig: GameConfig) {
             self.gameConfig = gameConfig
@@ -160,12 +166,14 @@ extension CrazyEightsView {
                 setGameView(viewOfGame)
             case .itsYourTurn(let viewOfGame):
                 log("It's your turn")
+                currentPlayer = "You're up!"
                 errorMessage = nil
                 itIsYourTurn = true
                 setGameView(viewOfGame)
             case .itsPlayersTurn(let playerId):
                 if playerId != gameConfig.userConfig.userModel.id {
                     let player = getPlayer(id: playerId)
+                    currentPlayer = "\(player)'s turn"
                     log("It's \(player)'s turn")
                 }
             case .playerDrewCard(let playerId):
