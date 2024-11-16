@@ -46,11 +46,6 @@ struct CrazyEightsView: View {
                     cards: viewModel.yourCards,
                     cardSelected: { viewModel.cardSelected($0) }
                 )
-                .overlay {
-                    Rectangle().foregroundStyle(
-                        viewModel.itIsYourTurn ? .clear : .gray.opacity(0.8)
-                    )
-                }
                 .padding([.leading, .trailing, .top])
             }
         }
