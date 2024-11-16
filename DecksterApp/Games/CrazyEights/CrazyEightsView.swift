@@ -55,7 +55,15 @@ struct CrazyEightsView: View {
             }
         }
         .overlay {
-            if !viewModel.isGameStarted {
+            if let gameEndedMessage = viewModel.gameEndedMessage {
+                ZStack {
+                    Rectangle()
+                        .foregroundStyle(Color.gray.opacity(0.8))
+
+                    Text(gameEndedMessage)
+                        .font(.system(size: 60, weight: .bold))
+                }
+            } else if !viewModel.isGameStarted {
                 ZStack {
                     Rectangle()
                         .foregroundStyle(Color.gray.opacity(0.8))
@@ -97,6 +105,7 @@ extension CrazyEightsView {
         var otherPlayers: [CrazyEights.OtherPlayer] = []
         var logMessages: [LogMessage] = []
         var currentPlayer: String?
+        var gameEndedMessage: String?
 
         init(gameConfig: GameConfig) {
             self.gameConfig = gameConfig
@@ -160,6 +169,11 @@ extension CrazyEightsView {
         private func handleNotification(_ notification: CrazyEights.Notification) {
             switch notification {
             case .gameEnded(let players):
+                if yourCards.isEmpty {
+                    gameEndedMessage = "You did not lose!"
+                } else {
+                    gameEndedMessage = "a loser is you"
+                }
                 log("Game has ended!", isBold: true)
             case .gameStarted(_, let viewOfGame):
                 log("Game has begun!", isBold: true)
