@@ -104,8 +104,8 @@ public class GameClient<Action: Encodable, ActionResponse: Decodable, Notificati
     }
 
     public func disconnect() {
-        actionSocket.disconnect()
         notificationSocket?.disconnect()
+        actionSocket.disconnect()
     }
 
     public func sendAction(_ action: Action) async throws -> ActionResponse {

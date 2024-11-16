@@ -20,6 +20,9 @@ struct ChatroomView: View {
                 await viewModel.connect()
             }
         }
+        .onDisappear {
+            viewModel.client.disconnect()
+        }
     }
 }
 

@@ -37,7 +37,7 @@ final class WebSocketConnection {
     }
 
     func disconnect() {
-        webSocketTask?.cancel(with: .goingAway, reason: nil)
+        webSocketTask?.cancel(with: .normalClosure, reason: Data("Client disconnected".utf8))
         webSocketTask = nil
         print("\(Self.self).\(#function): Disconnected from WebSocket")
     }
