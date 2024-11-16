@@ -70,6 +70,7 @@ struct LobbyView: View {
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .onTapGesture {
+                            if isUserInGame(activeGame) { return }
                             let gameConfig = GameConfig(
                                 gameType: viewModel.gameType,
                                 userConfig: viewModel.userConfig,
@@ -83,6 +84,10 @@ struct LobbyView: View {
                 .padding(.horizontal)
             }
         }
+    }
+
+    private func isUserInGame(_ game: DecksterGame) -> Bool {
+        game.players.contains(where: { $0.id == viewModel.userConfig.userModel.id })
     }
 }
 
