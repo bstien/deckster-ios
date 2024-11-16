@@ -5,6 +5,7 @@ extension CrazyEights {
         case gameEnded(players: [Player])
         case gameStarted(gameId: String, viewOfGame: GameView)
         case itsYourTurn(viewOfGame: GameView)
+        case itsPlayersTurn(playerId: String)
         case playerDrewCard(playerId: String)
         case playerIsDone(playerId: String)
         case playerPassed(playerId: String)
@@ -29,6 +30,9 @@ extension CrazyEights {
             case .itsYourTurn:
                 let model = try ItsYourTurn(from: decoder)
                 self = .itsYourTurn(viewOfGame: model.playerViewOfGame)
+            case .itsPlayersTurn:
+                let model = try ItsPlayersTurn(from: decoder)
+                self = .itsPlayersTurn(playerId: model.playerId)
             case .playerDrewCard:
                 let model = try PlayerDrewCard(from: decoder)
                 self = .playerDrewCard(playerId: model.playerId)
@@ -60,6 +64,7 @@ extension CrazyEights.Notification {
         case gameEnded = "CrazyEights.GameEndedNotification"
         case gameStarted = "CrazyEights.GameStartedNotification"
         case itsYourTurn = "CrazyEights.ItsYourTurnNotification"
+        case itsPlayersTurn = "CrazyEights.ItsPlayersTurnNotification"
         case playerDrewCard = "CrazyEights.PlayerDrewCardNotification"
         case playerIsDone = "CrazyEights.PlayerIsDoneNotification"
         case playerPassed = "CrazyEights.PlayerPassedNotification"
@@ -82,6 +87,10 @@ extension CrazyEights.Notification {
 
     struct ItsYourTurn: Decodable {
         let playerViewOfGame: CrazyEights.GameView
+    }
+
+    struct ItsPlayersTurn: Decodable {
+        let playerId: String
     }
 
     struct PlayerDrewCard: Decodable {

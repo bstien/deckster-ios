@@ -163,9 +163,14 @@ extension CrazyEightsView {
                 errorMessage = nil
                 itIsYourTurn = true
                 setGameView(viewOfGame)
+            case .itsPlayersTurn(let playerId):
+                if playerId != gameConfig.userConfig.userModel.id {
+                    let player = getPlayer(id: playerId)
+                    log("It's \(player)'s turn")
+                }
             case .playerDrewCard(let playerId):
                 let player = getPlayer(id: playerId)
-                log("\(player) draw a card")
+                log("\(player) drew a card")
             case .playerIsDone(let playerId):
                 let player = getPlayer(id: playerId)
                 log("\(player) finished the turn")
