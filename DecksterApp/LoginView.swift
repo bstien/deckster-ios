@@ -41,9 +41,9 @@ struct LoginView: View {
 extension LoginView {
     @Observable
     class ViewModel {
-        var username: String = "Otzi"
+        var username: String = "Botzi"
         var password: String = "1234"
-        var host: String = "192.168.0.134:13992"
+        var host: String = "platano.local:13992"
         var errorMessage: String?
         var userConfig: UserConfig?
 
