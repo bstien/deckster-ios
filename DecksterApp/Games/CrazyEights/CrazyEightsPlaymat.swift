@@ -16,21 +16,7 @@ struct CrazyEightsPlaymat: View {
         VStack(spacing: 25) {
             HStack(spacing: 25) {
                 CardView(card: topCard)
-
-                CardView(card: nil)
-                    .overlay {
-                        VStack(spacing: 6) {
-                            Text("Draw pile")
-
-                            if let drawPileCount {
-                                HStack(spacing: 4) {
-                                    Image(systemName: "square.stack.fill")
-                                    Text("\(drawPileCount)")
-                                }
-                            }
-                        }
-                        .foregroundStyle(.secondary)
-                    }
+                DrawPileCardView(drawPileCount: drawPileCount ?? 0)
             }
 
             if let currentSuit {

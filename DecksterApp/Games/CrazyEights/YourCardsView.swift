@@ -11,7 +11,7 @@ struct YourCardsView: View {
             CardView(card: Card(rank: 1, suit: .clubs))
                 .opacity(0)
 
-            ScrollView(.horizontal) {
+            //ScrollView(.horizontal) {
                 HStack {
                     Spacer()
                     ForEach(cards, id: \.self) { card in
@@ -22,10 +22,10 @@ struct YourCardsView: View {
                     }
                     Spacer()
                 }
-                .frame(minWidth: width)
+                .frame(minWidth: width, maxWidth: .infinity, alignment: .center)
                 .padding(.bottom, -15)
                 .animation(.spring, value: cards)
-            }
+            //}
         }
         .widthReader { width in
             self.width = width
