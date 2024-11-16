@@ -21,7 +21,7 @@ struct CrazyEightsView: View {
                 )
                 .frame(maxWidth: .infinity)
 
-                Text("PLACEHOLDER")
+                LogView(messages: viewModel.logMessages)
                     .padding()
                     .frame(width: 200, alignment: .trailing)
             }
@@ -95,6 +95,7 @@ extension CrazyEightsView {
         var topCard: Card?
         var errorMessage: String?
         var otherPlayers: [CrazyEights.OtherPlayer] = []
+        var logMessages: [LogMessage] = []
 
         init(gameConfig: GameConfig) {
             self.gameConfig = gameConfig
@@ -158,39 +159,48 @@ extension CrazyEightsView {
         private func handleNotification(_ notification: CrazyEights.Notification) {
             switch notification {
             case .gameEnded(let players):
-                break
-            case .gameStarted(let _, let viewOfGame):
+                log("Game has ended!", isBold: true)
+            case .gameStarted(_, let viewOfGame):
+                log("Game has begun!", isBold: true)
                 setGameView(viewOfGame)
             case .itsYourTurn(let viewOfGame):
+                log("It's your turn")
                 errorMessage = nil
                 itIsYourTurn = true
                 setGameView(viewOfGame)
             case .playerDrewCard(let playerId):
-                break
+                let player = getPlayer(id: playerId)
+                log("\(player) draw a card")
             case .playerIsDone(let playerId):
-                break
+                let player = getPlayer(id: playerId)
+                log("\(player) finished the turn")
             case .playerPassed(let playerId):
-                break
+                let player = getPlayer(id: playerId)
+                log("\(player) passed")
             case .playerPutCard(let playerId, let card):
+                let player = getPlayer(id: playerId)
+                log("\(player) played card \(card.displayValue)")
                 topCard = card
             case .playerPutEight(let playerId, let card, let newSuit):
+                let player = getPlayer(id: playerId)
+                log("\(player) changed suit to \(newSuit.stringValue)")
                 currentSuit = newSuit
                 topCard = card
             }
         }
 
         private func handleResponse(_ actionResponse: CrazyEights.ActionResponse) {
-            itIsYourTurn = false
             crazyEightCard = nil
             errorMessage = nil
+            itIsYourTurn = false
 
             switch actionResponse {
             case .empty:
                 break
             case .card(let card):
+                itIsYourTurn = true
                 yourCards.append(card)
             case .viewOfGame(let gameView):
-                itIsYourTurn = true
                 setGameView(gameView)
             case .error(let errorMessage):
                 self.errorMessage = errorMessage
@@ -203,6 +213,15 @@ extension CrazyEightsView {
             topCard = gameView.topOfPile
             yourCards = gameView.cards
             otherPlayers = gameView.otherPlayers
+        }
+
+        private func log(_ message: String, color: Color = .primary, isBold: Bool = false) {
+            logMessages.append(LogMessage(text: message, color: color, isBold: isBold))
+        }
+
+        private func getPlayer(id: String) -> String {
+            let player = otherPlayers.first(where: { $0.id == id })
+            return player?.name ?? "You"
         }
     }
 }
