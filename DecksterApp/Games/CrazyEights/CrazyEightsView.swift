@@ -21,7 +21,8 @@ struct CrazyEightsView: View {
 
                     CrazyEightsPlaymat(
                         currentSuit: viewModel.currentSuit,
-                        topCard: viewModel.topCard
+                        topCard: viewModel.topCard,
+                        drawPileCount: viewModel.drawPileCount
                     )
                     .frame(maxWidth: .infinity)
                 }
@@ -106,6 +107,7 @@ extension CrazyEightsView {
         var logMessages: [LogMessage] = []
         var currentPlayer: String?
         var gameEndedMessage: String?
+        var drawPileCount: Int?
 
         init(gameConfig: GameConfig) {
             self.gameConfig = gameConfig
@@ -235,6 +237,7 @@ extension CrazyEightsView {
             topCard = gameView.topOfPile
             yourCards = gameView.cards
             otherPlayers = gameView.otherPlayers
+            drawPileCount = gameView.stockPileCount
         }
 
         private func log(_ message: String, color: Color = .primary, isBold: Bool = false) {
