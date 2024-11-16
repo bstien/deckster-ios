@@ -16,9 +16,15 @@ struct CrazyEightsView: View {
             )
             .frame(maxHeight: .infinity)
 
+            Text(viewModel.errorMessage ?? "")
+                .foregroundColor(.red)
+                .padding()
+
             HStack {
                 Button("Pass turn") { viewModel.sendAction(.pass) }
+                    .disabled(!viewModel.itIsYourTurn)
                 Button("Draw card") { viewModel.sendAction(.drawCard) }
+                    .disabled(!viewModel.itIsYourTurn)
             }
 
             Divider()
@@ -31,7 +37,7 @@ struct CrazyEightsView: View {
                 )
                 .overlay {
                     Rectangle().foregroundStyle(
-                        viewModel.itIsYourTurn ? .clear : .gray.opacity(0.2)
+                        viewModel.itIsYourTurn ? .clear : .gray.opacity(0.8)
                     )
                 }
                 .padding([.leading, .trailing, .top])
@@ -76,6 +82,7 @@ extension CrazyEightsView {
         var currentSuit: Card.Suit?
         var yourCards = [Card]()
         var topCard: Card?
+        var errorMessage: String?
 
         init(gameConfig: GameConfig) {
             self.gameConfig = gameConfig
@@ -118,12 +125,10 @@ extension CrazyEightsView {
         }
 
         func sendAction(_ action: CrazyEights.Action) {
-            crazyEightCard = nil
             Task {
                 do {
                     let response = try await client.sendAction(action)
                     handleResponse(response)
-                    itIsYourTurn = false
                 } catch {
                     print(error)
                 }
@@ -145,6 +150,7 @@ extension CrazyEightsView {
             case .gameStarted(let _, let viewOfGame):
                 setGameView(viewOfGame)
             case .itsYourTurn(let viewOfGame):
+                errorMessage = nil
                 itIsYourTurn = true
                 setGameView(viewOfGame)
             case .playerDrewCard(let playerId):
@@ -162,15 +168,21 @@ extension CrazyEightsView {
         }
 
         private func handleResponse(_ actionResponse: CrazyEights.ActionResponse) {
+            itIsYourTurn = false
+            crazyEightCard = nil
+            errorMessage = nil
+
             switch actionResponse {
             case .empty:
                 break
             case .card(let card):
                 yourCards.append(card)
             case .viewOfGame(let gameView):
+                itIsYourTurn = true
                 setGameView(gameView)
-            case .error(let string):
-                print(string)
+            case .error(let errorMessage):
+                self.errorMessage = errorMessage
+                print(errorMessage)
             }
         }
 
