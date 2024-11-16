@@ -10,11 +10,22 @@ struct CrazyEightsView: View {
 
     var body: some View {
         VStack {
-            CrazyEightsPlaymat(
-                currentSuit: viewModel.currentSuit,
-                topCard: viewModel.topCard
-            )
-            .frame(maxHeight: .infinity)
+            HStack {
+                CrazyEightsOtherPlayersView(otherPlayers: viewModel.otherPlayers)
+                    .padding()
+                    .frame(width: 200, alignment: .leading)
+
+                CrazyEightsPlaymat(
+                    currentSuit: viewModel.currentSuit,
+                    topCard: viewModel.topCard
+                )
+                .frame(maxWidth: .infinity)
+
+                Text("PLACEHOLDER")
+                    .padding()
+                    .frame(width: 200, alignment: .trailing)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
 
             Text(viewModel.errorMessage ?? "")
                 .foregroundColor(.red)
@@ -83,6 +94,7 @@ extension CrazyEightsView {
         var yourCards = [Card]()
         var topCard: Card?
         var errorMessage: String?
+        var otherPlayers: [CrazyEights.OtherPlayer] = []
 
         init(gameConfig: GameConfig) {
             self.gameConfig = gameConfig
@@ -190,6 +202,7 @@ extension CrazyEightsView {
             currentSuit = gameView.currentSuit
             topCard = gameView.topOfPile
             yourCards = gameView.cards
+            otherPlayers = gameView.otherPlayers
         }
     }
 }
