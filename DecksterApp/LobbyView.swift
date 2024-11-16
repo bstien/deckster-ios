@@ -13,32 +13,36 @@ struct LobbyView: View {
     }
 
     var body: some View {
-        HStack {
-            getOnGoingGameView()
-            .frame(maxWidth: .infinity)
-            VStack {
-                Text("Ended games")
-                    .font(.title3)
-                List {}
+        VStack {
+            HStack {
+                getOnGoingGameView()
+                    .frame(maxWidth: .infinity)
+                
+                VStack {
+                    Text("Ended games")
+                        .font(.title3)
+                    List {}
+                }
+                .frame(maxWidth: .infinity)
             }
             .frame(maxWidth: .infinity)
-        }
-        .padding(.top)
-
-        Button("Create game") {
-            Task {
-                if let createdGame = await viewModel.createGame() {
-                    openWindow(value: createdGame)
-                } else {
-                    // Show error
+            .padding(.top)
+            
+            Button("Create game") {
+                Task {
+                    if let createdGame = await viewModel.createGame() {
+                        openWindow(value: createdGame)
+                    } else {
+                        // Show error
+                    }
                 }
             }
-        }
-        .padding()
-        .task {
-            while !Task.isCancelled {
-                await viewModel.fetchGames()
-                try? await Task.sleep(for: .seconds(1))
+            .padding()
+            .task {
+                while !Task.isCancelled {
+                    await viewModel.fetchGames()
+                    try? await Task.sleep(for: .seconds(1))
+                }
             }
         }
     }
