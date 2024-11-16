@@ -19,7 +19,7 @@ struct DecksterApp: App {
                 case .uno:
                     Text("Uno")
                 case .crazyEights:
-                    Text("Crazy Eights")
+                    CrazyEightsView(gameConfig: gameConfig)
                 case .idiot:
                     Text("Idiot")
                 }
