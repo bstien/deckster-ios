@@ -4,26 +4,32 @@ import DecksterLib
 struct YourCardsView: View {
     let cards: [Card]
     let cardSelected: (Card) -> Void
+    @State private var width: CGFloat?
 
     var body: some View {
         ZStack {
             CardView(card: Card(rank: 1, suit: .clubs))
                 .opacity(0)
 
-            //ScrollView(.horizontal) {
+            ScrollView(.horizontal) {
                 HStack {
+                    Spacer()
                     ForEach(cards, id: \.self) { card in
                         CardView(card: card)
                             .onTapGesture {
                                 cardSelected(card)
                             }
                     }
+                    Spacer()
                 }
-                .frame(alignment: .center)
+                .frame(minWidth: width)
                 .padding(.bottom, -25)
-            //}
+            }
         }
         .animation(.easeInOut, value: cards)
+        .widthReader { width in
+            self.width = width
+        }
     }
 }
 
