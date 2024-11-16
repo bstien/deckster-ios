@@ -1,8 +1,6 @@
 import SwiftUI
 import DecksterLib
 
-let name = "Otzi"
-
 struct ChatroomView: View {
     @State private var viewModel: ViewModel
 
@@ -40,7 +38,7 @@ extension ChatroomView {
             client = Chatroom.Client(
                 hostname: gameConfig.userConfig.host,
                 gameId: gameConfig.gameId,
-                players: [],
+                players: gameConfig.players,
                 accessToken: gameConfig.userConfig.userModel.accessToken
             )
         }
@@ -54,9 +52,11 @@ extension ChatroomView {
                         for try await notification in client.notificationStream {
                             switch notification {
                             case .message(let message):
+                                let playerName = gameConfig.players.first(where: { $0.id == message.sender })?.name ?? "Unknown"
+                                
                                 let message = ChatMessage(
                                     isYou: message.sender == gameConfig.userConfig.userModel.id,
-                                    sender: message.sender,
+                                    sender: playerName,
                                     body: message.message
                                 )
                                 messages.append(message)
