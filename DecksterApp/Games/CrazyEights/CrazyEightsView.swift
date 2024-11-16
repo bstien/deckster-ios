@@ -192,15 +192,15 @@ extension CrazyEightsView {
         private func handleResponse(_ actionResponse: CrazyEights.ActionResponse) {
             crazyEightCard = nil
             errorMessage = nil
-            itIsYourTurn = false
 
             switch actionResponse {
             case .empty:
-                break
+                itIsYourTurn = false
             case .card(let card):
                 itIsYourTurn = true
                 yourCards.append(card)
             case .viewOfGame(let gameView):
+                itIsYourTurn = false
                 setGameView(gameView)
             case .error(let errorMessage):
                 self.errorMessage = errorMessage
