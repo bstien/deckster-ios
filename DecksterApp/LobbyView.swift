@@ -66,9 +66,22 @@ struct LobbyView: View {
                                     .foregroundStyle(.secondary)
                                     .italic()
                             }
-                            Text("\(activeGame.players.count) players")
+
+                            HStack {
+                                Text("\(activeGame.players.count) players")
+
+                                if isUserInGame(activeGame) {
+                                    Spacer()
+                                    Text("You've joined this game")
+                                        .font(.callout)
+                                        .foregroundStyle(.secondary)
+                                        .italic()
+                                }
+                            }
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
+                        .contentShape(Rectangle())
+                        .help(activeGame.players.map(\.name).joined(separator: ", "))
                         .onTapGesture {
                             if isUserInGame(activeGame) { return }
                             let gameConfig = GameConfig(
