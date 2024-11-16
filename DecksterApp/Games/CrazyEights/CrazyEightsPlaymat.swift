@@ -6,18 +6,18 @@ struct CrazyEightsPlaymat: View {
     let topCard: Card?
 
     var body: some View {
-        VStack {
+        VStack(spacing: 25) {
+            CardView(card: topCard)
+
             if let currentSuit {
-                HStack {
+                VStack {
                     Text("Current suit:")
                         .bold()
                     Text(currentSuit.stringValue)
-                        .font(.title3)
+                        .font(.largeTitle)
                         .foregroundStyle(currentSuit.color)
                 }
             }
-
-            CardView(card: topCard)
         }
     }
 }
