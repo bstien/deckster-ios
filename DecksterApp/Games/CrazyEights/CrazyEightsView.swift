@@ -15,11 +15,16 @@ struct CrazyEightsView: View {
                     .padding()
                     .frame(width: 200, alignment: .leading)
 
-                CrazyEightsPlaymat(
-                    currentSuit: viewModel.currentSuit,
-                    topCard: viewModel.topCard
-                )
-                .frame(maxWidth: .infinity)
+                VStack(spacing: 20) {
+                    Text(viewModel.currentPlayer ?? "")
+                        .font(.largeTitle)
+
+                    CrazyEightsPlaymat(
+                        currentSuit: viewModel.currentSuit,
+                        topCard: viewModel.topCard
+                    )
+                    .frame(maxWidth: .infinity)
+                }
 
                 LogView(messages: viewModel.logMessages)
                     .padding()
@@ -50,7 +55,15 @@ struct CrazyEightsView: View {
             }
         }
         .overlay {
-            if !viewModel.isGameStarted {
+            if let gameEndedMessage = viewModel.gameEndedMessage {
+                ZStack {
+                    Rectangle()
+                        .foregroundStyle(Color.gray.opacity(0.8))
+
+                    Text(gameEndedMessage)
+                        .font(.system(size: 60, weight: .bold))
+                }
+            } else if !viewModel.isGameStarted {
                 ZStack {
                     Rectangle()
                         .foregroundStyle(Color.gray.opacity(0.8))
@@ -91,6 +104,8 @@ extension CrazyEightsView {
         var errorMessage: String?
         var otherPlayers: [CrazyEights.OtherPlayer] = []
         var logMessages: [LogMessage] = []
+        var currentPlayer: String?
+        var gameEndedMessage: String?
 
         init(gameConfig: GameConfig) {
             self.gameConfig = gameConfig
@@ -154,18 +169,25 @@ extension CrazyEightsView {
         private func handleNotification(_ notification: CrazyEights.Notification) {
             switch notification {
             case .gameEnded(let players):
+                if yourCards.isEmpty {
+                    gameEndedMessage = "You did not lose!"
+                } else {
+                    gameEndedMessage = "a loser is you"
+                }
                 log("Game has ended!", isBold: true)
             case .gameStarted(_, let viewOfGame):
                 log("Game has begun!", isBold: true)
                 setGameView(viewOfGame)
             case .itsYourTurn(let viewOfGame):
                 log("It's your turn")
+                currentPlayer = "You're up!"
                 errorMessage = nil
                 itIsYourTurn = true
                 setGameView(viewOfGame)
             case .itsPlayersTurn(let playerId):
                 if playerId != gameConfig.userConfig.userModel.id {
                     let player = getPlayer(id: playerId)
+                    currentPlayer = "\(player)'s turn"
                     log("It's \(player)'s turn")
                 }
             case .playerDrewCard(let playerId):
