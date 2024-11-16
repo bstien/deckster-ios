@@ -17,11 +17,7 @@ struct CrazyEightsPlaymat: View {
                 }
             }
 
-            if let topCard {
-                CardView(card: topCard)
-            } else {
-                Text("No card... yet!")
-            }
+            CardView(card: topCard)
         }
     }
 }

@@ -14,7 +14,8 @@ struct ChatroomView: View {
         ChatView(
             messageToSend: $viewModel.messageToSend,
             messages: viewModel.messages,
-            sendMessageTapped: viewModel.sendMessage)
+            sendMessageTapped: viewModel.sendMessage
+        )
         .onAppear() {
             Task {
                 await viewModel.connect()
@@ -52,9 +53,8 @@ extension ChatroomView {
                         for try await notification in client.notificationStream {
                             switch notification {
                             case .message(let message):
-                                print("New message: \(message)")
                                 let message = ChatMessage(
-                                    isYou: message.sender == "d1dfd303-c158-4dfa-b8ee-b4ffc546042d",
+                                    isYou: message.sender == gameConfig.userConfig.userModel.id,
                                     sender: message.sender,
                                     body: message.message
                                 )

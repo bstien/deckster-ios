@@ -5,8 +5,10 @@ import DecksterLib
 struct DecksterApp: App {
     var body: some Scene {
         WindowGroup {
-            LoginView()
-                .frame(width: 800, height: 600)
+            NavigationStack {
+                LoginView()
+            }
+            .frame(width: 800, height: 600)
         }
 
         WindowGroup(for: GameConfig.self) { $gameConfig in
