@@ -2,7 +2,7 @@ import Foundation
 
 extension CrazyEights {
     public enum Notification: Decodable {
-        case gameEnded(players: [Player])
+        case gameEnded(loserId: String, loserName: String, players: [Player])
         case gameStarted(gameId: String, viewOfGame: GameView)
         case itsYourTurn(viewOfGame: GameView)
         case itsPlayersTurn(playerId: String)
@@ -24,7 +24,11 @@ extension CrazyEights {
             switch kind {
             case .gameEnded:
                 let model = try GameEnded(from: decoder)
-                self = .gameEnded(players: model.players)
+                self = .gameEnded(
+                    loserId: model.loserId,
+                    loserName: model.loserName,
+                    players: model.players
+                )
             case .gameStarted:
                 let model = try GameStarted(from: decoder)
                 self = .gameStarted(gameId: model.gameId, viewOfGame: model.playerViewOfGame)
@@ -81,6 +85,8 @@ extension CrazyEights.Notification {
 
 extension CrazyEights.Notification {
     struct GameEnded: Decodable {
+        let loserName: String
+        let loserId: String
         let players: [Player]
     }
 

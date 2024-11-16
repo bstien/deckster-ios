@@ -170,11 +170,11 @@ extension CrazyEightsView {
 
         private func handleNotification(_ notification: CrazyEights.Notification) {
             switch notification {
-            case .gameEnded(let players):
-                if yourCards.isEmpty {
-                    gameEndedMessage = "You did not lose!"
-                } else {
+            case .gameEnded(let loserId, let loserName, let players):
+                if loserId == gameConfig.userConfig.userModel.id {
                     gameEndedMessage = "a loser is you"
+                } else {
+                    gameEndedMessage = "Hooray! \(loserName) lost the game"
                 }
                 log("Game has ended!", isBold: true)
             case .gameStarted(_, let viewOfGame):
