@@ -9,13 +9,9 @@ extension Idiot {
         case putBlindCard(attemptedCard: Card, pullInCards: [Card])
         case error(String)
 
-        enum CodingKeys: String, CodingKey {
-            case kind = "type"
-        }
-
         public init(from decoder: any Decoder) throws {
-            let container = try decoder.container(keyedBy: CodingKeys.self)
-            let response = try container.decode(DecksterResponse<Kind>.self, forKey: .kind)
+            let container = try decoder.singleValueContainer()
+            let response = try container.decode(DecksterResponse<Kind>.self)
 
             if let error = response.error {
                 self = .error(error)

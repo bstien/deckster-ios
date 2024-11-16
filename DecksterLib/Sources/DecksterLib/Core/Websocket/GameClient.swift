@@ -19,6 +19,7 @@ public class GameClient<Action: Encodable, ActionResponse: Decodable, Notificati
             Task {
                 do {
                     for try await data in notificationSocket.messageStream {
+                        print(String(data: data, encoding: .utf8))
                         let decodedMessage = try decoder.decode(Notification.self, from: data)
                         continuation.yield(decodedMessage)
                     }
@@ -72,8 +73,10 @@ public class GameClient<Action: Encodable, ActionResponse: Decodable, Notificati
 
     public func startGame() async throws {
         let urlString = "http://\(hostname)/\(gameType.rawValue)/games/\(gameId)/start"
-        let urlRequest = try URLRequest.create(urlString, accessToken: accessToken)
-        let (_, _) = try await urlSession.data(for: urlRequest)
+        let urlRequest = try URLRequest.create(urlString, method: "POST", accessToken: accessToken)
+        let (data, _) = try await urlSession.data(for: urlRequest)
+        
+        print(String(data: data, encoding: .utf8))
         print("Game started!")
     }
 
@@ -98,10 +101,10 @@ public class GameClient<Action: Encodable, ActionResponse: Decodable, Notificati
     }
 
     public func sendAction(_ action: Action) async throws -> ActionResponse {
-        async let data = actionSocket.receiveNextMessage()
         try await actionSocket.send(action)
-
-        return try decoder.decode(ActionResponse.self, from: await data)
+        let data = try await actionSocket.receiveNextMessage()
+        print(String(data: data, encoding: .utf8))
+        return try decoder.decode(ActionResponse.self, from: data)
     }
 
     // MARK: - Private methods
