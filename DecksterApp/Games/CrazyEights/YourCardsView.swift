@@ -8,10 +8,9 @@ struct YourCardsView: View {
     var body: some View {
         ZStack {
             CardView(card: Card(rank: 1, suit: .clubs))
-                .padding(.bottom, -12)
                 .opacity(0)
 
-            ScrollView(.horizontal) {
+            //ScrollView(.horizontal) {
                 HStack {
                     ForEach(cards, id: \.self) { card in
                         CardView(card: card)
@@ -20,8 +19,9 @@ struct YourCardsView: View {
                             }
                     }
                 }
-                .padding(.bottom, -12)
-            }
+                .frame(alignment: .center)
+                .padding(.bottom, -25)
+            //}
         }
         .animation(.easeInOut, value: cards)
     }

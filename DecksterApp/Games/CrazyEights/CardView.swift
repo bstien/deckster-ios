@@ -17,7 +17,7 @@ struct CardView: View {
         .padding(.vertical)
         .padding(.vertical)
         .clipShape(.rect(cornerRadius: 12))
-        .frame(maxWidth: 90, maxHeight: 120)
+        .frame(width: 90, height: 120)
         .background {
             RoundedRectangle(cornerRadius: 12)
                 .fill(card != nil ?
@@ -31,16 +31,17 @@ struct CardView: View {
                         StrokeStyle(lineWidth: 2, dash: [5])
                 )
         }
+        .padding(2)
     }
 }
 
 #Preview {
     HStack{
         CardView(card: nil)
-        .padding()
+        //.padding()
         CardView(card: Card(
             rank: 4, suit: .clubs
         ))
-        .padding()
+        //.padding()
     }
 }
