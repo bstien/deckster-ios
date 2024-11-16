@@ -9,12 +9,19 @@ struct LogView: View {
                 .font(.title3)
 
             ScrollView {
-                VStack(alignment: .leading, spacing: 10) {
-                    ForEach(messages) { message in
-                        Text(message.text)
-                            .foregroundStyle(message.color)
-                            .bold(message.isBold)
-                            .font(.callout)
+                ScrollViewReader { value in
+                    VStack(alignment: .leading, spacing: 10) {
+                        ForEach(messages) { message in
+                            Text(message.text)
+                                .foregroundStyle(message.color)
+                                .bold(message.isBold)
+                                .font(.callout)
+                                .id(message.id)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                        }
+                    }
+                    .onChange(of: messages.count) { _, _ in
+                        value.scrollTo(messages.last?.id)
                     }
                 }
             }
@@ -22,7 +29,7 @@ struct LogView: View {
     }
 }
 
-struct LogMessage: Identifiable {
+struct LogMessage: Identifiable, Hashable {
     let id = UUID()
     let text: String
     let color: Color
@@ -36,14 +43,19 @@ struct LogMessage: Identifiable {
 }
 
 #Preview {
-    LogView(
-        messages: [
-            LogMessage(text: "Hei"),
-            LogMessage(text: "Hei", color: .red),
-            LogMessage(text: "Hei", color: .red, isBold: true),
-            LogMessage(text: "Hei", isBold: true),
-        ]
-    )
+    @Previewable @State var messages: [LogMessage] = [
+        LogMessage(text: "Hei"),
+        LogMessage(text: "Hei", color: .red),
+        LogMessage(text: "Hei", color: .red, isBold: true),
+        LogMessage(text: "Hei", isBold: true),
+    ]
+    VStack {
+        LogView(messages: messages)
+
+        Button("Add") {
+            messages.append(LogMessage(text: "Hei"))
+        }
+    }
     .frame(width: 200)
     .padding()
 }
