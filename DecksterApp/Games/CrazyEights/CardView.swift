@@ -17,7 +17,7 @@ struct CardView: View {
         .padding(.vertical)
         .padding(.vertical)
         .clipShape(.rect(cornerRadius: 12))
-        .frame(maxWidth: 90, maxHeight: 100)
+        .frame(maxWidth: 90, maxHeight: 120)
         .background {
             RoundedRectangle(cornerRadius: 12)
                 .fill(card != nil ?
