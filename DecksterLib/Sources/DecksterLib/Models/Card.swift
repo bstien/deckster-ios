@@ -36,10 +36,10 @@ extension Card.Rank {
 
 extension Card {
     public enum Suit: String, Codable {
-        case clubs
-        case diamonds
-        case hearts
-        case spades
+        case clubs = "Clubs"
+        case diamonds = "Diamonds"
+        case hearts = "Hearts"
+        case spades = "Spades"
 
         public var stringValue: String {
             switch self {
