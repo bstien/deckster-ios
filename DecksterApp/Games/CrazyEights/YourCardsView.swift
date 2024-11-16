@@ -23,10 +23,10 @@ struct YourCardsView: View {
                     Spacer()
                 }
                 .frame(minWidth: width)
-                .padding(.bottom, -25)
+                .padding(.bottom, -15)
+                .animation(.spring, value: cards)
             }
         }
-        .animation(.easeInOut, value: cards)
         .widthReader { width in
             self.width = width
         }
