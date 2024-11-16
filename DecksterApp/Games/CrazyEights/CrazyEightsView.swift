@@ -210,6 +210,8 @@ extension CrazyEightsView {
                 log("\(player) changed suit to \(newSuit.stringValue)")
                 currentSuit = newSuit
                 topCard = card
+            case .discardPileShuffled:
+                break
             }
         }
 

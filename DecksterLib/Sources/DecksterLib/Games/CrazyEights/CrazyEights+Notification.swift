@@ -11,6 +11,7 @@ extension CrazyEights {
         case playerPassed(playerId: String)
         case playerPutCard(playerId: String, card: Card)
         case playerPutEight(playerId: String, card: Card, newSuit: Card.Suit)
+        case discardPileShuffled
 
         enum CodingKeys: String, CodingKey {
             case kind = "type"
@@ -52,6 +53,8 @@ extension CrazyEights {
                     card: model.card,
                     newSuit: model.newSuit
                 )
+            case .discardPileShuffled:
+                self = .discardPileShuffled
             }
         }
     }
@@ -70,6 +73,7 @@ extension CrazyEights.Notification {
         case playerPassed = "CrazyEights.PlayerPassedNotification"
         case playerPutCard = "CrazyEights.PlayerPutCardNotification"
         case playerPutEight = "CrazyEights.PlayerPutEightNotification"
+        case discardPileShuffled = "CrazyEights.DiscardPileShuffledNotification"
     }
 }
 
@@ -115,4 +119,6 @@ extension CrazyEights.Notification {
         let card: Card
         let newSuit: Card.Suit
     }
+
+    struct DiscardPileShuffled: Decodable {}
 }
