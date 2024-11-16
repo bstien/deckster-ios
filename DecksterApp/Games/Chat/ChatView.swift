@@ -18,14 +18,13 @@ struct ChatView: View {
                             .frame(alignment: message.isYou ? .trailing : .leading)
                             .multilineTextAlignment(message.isYou ? .trailing : .leading)
                             .padding()
-                            .background(message.isYou ? .green : .blue)
-                            .clipShape(.rect(cornerRadius: 7))
+                            .background(message.isYou ? .green.opacity(0.7) : .blue.opacity(0.7))
+                            .clipShape(.rect(cornerRadius: 15))
                             
                     }
                     .frame(maxWidth: .infinity, alignment: message.isYou ? .trailing : .leading)
                     .padding([.leading, .top, .trailing])
                 }
-                .padding(.top)
                 .frame(maxWidth: .infinity)
             }
             
@@ -35,7 +34,7 @@ struct ChatView: View {
                 Button("Send") {
                     sendMessageTapped(messageToSend)
                 }
-            }.padding(.horizontal)
+            }.padding(5)
         }
     }
 }
