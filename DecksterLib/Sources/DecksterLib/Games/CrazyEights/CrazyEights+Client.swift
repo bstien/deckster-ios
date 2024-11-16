@@ -9,8 +9,8 @@ extension CrazyEights {
             gameId: String,
             players: [Player],
             accessToken: String
-        ) throws {
-            try super.init(
+        ) {
+            super.init(
                 hostname: hostname,
                 gameType: .crazyEights,
                 gameId: gameId,

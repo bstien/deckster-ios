@@ -61,6 +61,7 @@ extension CrazyEightsView {
             client = CrazyEights.Client(
                 hostname: gameConfig.userConfig.host,
                 gameId: gameConfig.gameId,
+                players: [],
                 accessToken: gameConfig.userConfig.userModel.accessToken
             )
         }
