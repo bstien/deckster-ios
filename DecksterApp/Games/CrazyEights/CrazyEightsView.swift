@@ -38,7 +38,16 @@ struct CrazyEightsView: View {
             }
         }
         .overlay {
-            if let crazyEightCard = viewModel.crazyEightCard {
+            if !viewModel.isGameStarted {
+                ZStack {
+                    Rectangle()
+                        .foregroundStyle(Color.gray.opacity(0.8))
+
+                    Button("Start game") {
+                        viewModel.startGame()
+                    }
+                }
+            } else if let crazyEightCard = viewModel.crazyEightCard {
                 ZStack {
                     Rectangle()
                         .foregroundStyle(Color.gray.opacity(0.8))
@@ -62,6 +71,7 @@ extension CrazyEightsView {
         var notificationTask: Task<Void, Never>?
 
         var crazyEightCard: Card?
+        var isGameStarted = false
         var itIsYourTurn = false
         var currentSuit: Card.Suit?
         var yourCards = [Card]()
@@ -84,6 +94,7 @@ extension CrazyEightsView {
                 notificationTask = Task {
                     do {
                         for try await notification in client.notificationStream {
+                            isGameStarted = true
                             handleNotification(notification)
                         }
                     } catch {
@@ -92,6 +103,16 @@ extension CrazyEightsView {
                 }
             } catch {
                 print(error)
+            }
+        }
+
+        func startGame() {
+            Task {
+                do {
+                    try await client.startGame()
+                } catch {
+                    print(error)
+                }
             }
         }
 
