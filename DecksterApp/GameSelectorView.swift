@@ -26,6 +26,7 @@ struct GameSelectorView: View {
                 userConfig: userConfig
             )
         }
+        .navigationTitle("Select game")
     }
 }
 

@@ -45,6 +45,7 @@ struct LobbyView: View {
                 }
             }
         }
+        .navigationTitle("\(viewModel.gameType.rawValue.capitalized) lobby")
     }
     
     func getOnGoingGameView() -> some View {

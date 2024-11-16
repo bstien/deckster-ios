@@ -28,6 +28,7 @@ struct LoginView: View {
                 }
             }
             .padding()
+            .navigationTitle("Deckster login")
         }
     }
     
