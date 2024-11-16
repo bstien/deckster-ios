@@ -11,6 +11,7 @@ struct ChatroomView: View {
     var body: some View {
         ChatView(
             messageToSend: $viewModel.messageToSend,
+            chatName: viewModel.gameConfig.gameId,
             messages: viewModel.messages,
             sendMessageTapped: viewModel.sendMessage
         )
@@ -52,15 +53,20 @@ extension ChatroomView {
                         for try await notification in client.notificationStream {
                             switch notification {
                             case .message(let message):
-                                let playerName = gameConfig.players.first(where: { $0.id == message.sender })?.name ?? "Unknown"
+                                let game = try await client.getGame()
+                                let isYou = message.sender == gameConfig.userConfig.userModel.id
+                                let playerName = game.players.first(where: {$0.id == message.sender})?.name ?? "Unknown"
                                 
                                 let message = ChatMessage(
-                                    isYou: message.sender == gameConfig.userConfig.userModel.id,
-                                    sender: playerName,
+                                    isYou: isYou,
+                                    sender: playerName.capitalized,
                                     body: message.message
                                 )
                                 messages.append(message)
-                                messageToSend = ""
+                                
+                                if isYou {
+                                    messageToSend = ""
+                                }
                             }
                         }
                     } catch {

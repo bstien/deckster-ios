@@ -3,11 +3,15 @@ import DecksterLib
 
 struct ChatView: View {
     @Binding var messageToSend: String
+    let chatName: String
     let messages: [ChatMessage]
     var sendMessageTapped: (String) -> Void
 
     var body: some View {
         VStack {
+            Text(chatName)
+                .font(.title)
+                .padding(5)
             ScrollView {
                 ForEach(messages, id: \.self) { message in
                     VStack(alignment: message.isYou ? .trailing : .leading) {
@@ -43,6 +47,7 @@ struct ChatView: View {
     @Previewable @State var messages = [ChatMessage]()
     ChatView(
         messageToSend: $messageToSend,
+        chatName: "ChatName123",
         messages: [
             ChatMessage(
                 isYou: true,

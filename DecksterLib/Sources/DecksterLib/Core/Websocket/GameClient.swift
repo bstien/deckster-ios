@@ -79,6 +79,14 @@ public class GameClient<Action: Encodable, ActionResponse: Decodable, Notificati
         print(String(data: data, encoding: .utf8))
         print("Game started!")
     }
+    
+    public func getGame() async throws -> DecksterGame {
+        let urlString = "http://\(hostname)/\(gameType.rawValue)/games/\(gameId)"
+        let urlRequest = try URLRequest.create(urlString, accessToken: accessToken)
+        let (data, _) = try await urlSession.data(for: urlRequest)
+        
+        return try JSONDecoder().decode(DecksterGame.self, from: data)
+    }
 
     public func connect() async throws {
         guard !isConnected else { return }
