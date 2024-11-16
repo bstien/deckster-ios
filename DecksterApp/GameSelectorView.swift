@@ -15,14 +15,14 @@ struct GameSelectorView: View {
             GameSelectorButton(
                 icon: "💬",
                 label: "Chatroom",
-                game: .chatroom,
+                gameType: .chatroom,
                 userConfig: userConfig
             )
             
             GameSelectorButton(
                 icon: "🃈",
                 label: "Crazy 8s",
-                game: .crazyEights,
+                gameType: .crazyEights,
                 userConfig: userConfig
             )
         }
@@ -32,14 +32,14 @@ struct GameSelectorView: View {
 struct GameSelectorButton: View {
     let icon: String
     let label: String
-    let game: Endpoint
+    let gameType: Endpoint
     let userConfig: UserConfig
     
     var body: some View {
         NavigationLink(
             destination: {
                 LobbyView(
-                    game: game,
+                    gameType: gameType,
                     userConfig: userConfig
                 )
             },

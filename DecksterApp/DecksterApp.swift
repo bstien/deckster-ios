@@ -13,7 +13,7 @@ struct DecksterApp: App {
 
         WindowGroup(for: GameConfig.self) { $gameConfig in
             if let gameConfig {
-                switch gameConfig.game {
+                switch gameConfig.gameType {
                 case .chatroom:
                     ChatroomView(gameConfig: gameConfig)
                 case .uno:

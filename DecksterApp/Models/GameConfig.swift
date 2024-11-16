@@ -2,7 +2,8 @@ import Foundation
 import DecksterLib
 
 struct GameConfig: Codable, Hashable {
-    let game: Endpoint
-    let gameId: String
+    let gameType: Endpoint
     let userConfig: UserConfig
+    let gameId: String
+    let players: [Player]
 }

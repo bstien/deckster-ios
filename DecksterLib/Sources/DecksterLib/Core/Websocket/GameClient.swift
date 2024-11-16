@@ -33,8 +33,9 @@ public class GameClient<Action: Encodable, ActionResponse: Decodable, Notificati
     // MARK: - Internal properties
 
     let hostname: String
-    let gameName: String
+    let gameType: Endpoint
     let gameId: String
+    let players: [Player]
     let accessToken: String
     private(set) var isConnected = false
 
@@ -49,18 +50,20 @@ public class GameClient<Action: Encodable, ActionResponse: Decodable, Notificati
 
     init(
         hostname: String,
-        gameName: String,
+        gameType: Endpoint,
         gameId: String,
+        players: [Player],
         accessToken: String,
         urlSession: URLSession = .shared
     ) {
         self.hostname = hostname
-        self.gameName = gameName
+        self.gameType = gameType
         self.gameId = gameId
+        self.players = players
         self.accessToken = accessToken
         self.urlSession = urlSession
 
-        let urlString = "ws://\(hostname)/\(gameName)/join/\(gameId)"
+        let urlString = "ws://\(hostname)/\(gameType.rawValue)/join/\(gameId)"
         let urlRequest = try! URLRequest.create(urlString, accessToken: accessToken)
         self.actionSocket = WebSocketConnection(urlRequest: urlRequest, urlSession: urlSession)
     }
@@ -68,7 +71,7 @@ public class GameClient<Action: Encodable, ActionResponse: Decodable, Notificati
     // MARK: - Public methods
 
     public func startGame() async throws {
-        let urlString = "http://\(hostname)/\(gameName)/games/\(gameId)/start"
+        let urlString = "http://\(hostname)/\(gameType.rawValue)/games/\(gameId)/start"
         let urlRequest = try URLRequest.create(urlString, accessToken: accessToken)
         let (_, _) = try await urlSession.data(for: urlRequest)
         print("Game started!")
@@ -104,7 +107,7 @@ public class GameClient<Action: Encodable, ActionResponse: Decodable, Notificati
     // MARK: - Private methods
 
     private func openNotificationSocket(with identifier: String) async throws {
-        let urlString = "ws://\(hostname)/\(gameName)/join/\(identifier)/finish"
+        let urlString = "ws://\(hostname)/\(gameType.rawValue)/join/\(identifier)/finish"
         let urlRequest = try URLRequest.create(urlString, accessToken: accessToken)
         let connection = WebSocketConnection(urlRequest: urlRequest)
         connection.connect()

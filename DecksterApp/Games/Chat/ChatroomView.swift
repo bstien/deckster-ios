@@ -40,6 +40,7 @@ extension ChatroomView {
             client = Chatroom.Client(
                 hostname: gameConfig.userConfig.host,
                 gameId: gameConfig.gameId,
+                players: [],
                 accessToken: gameConfig.userConfig.userModel.accessToken
             )
         }

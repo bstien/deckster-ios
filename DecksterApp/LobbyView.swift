@@ -5,73 +5,77 @@ struct LobbyView: View {
     @State private var viewModel: ViewModel
     @Environment(\.openWindow) var openWindow
 
-    init(game: Endpoint, userConfig: UserConfig) {
+    init(gameType: Endpoint, userConfig: UserConfig) {
         viewModel = ViewModel(
-            game: game,
+            gameType: gameType,
             userConfig: userConfig
         )
     }
 
     var body: some View {
-        VStack {
-            HStack {
-                VStack {
-                    Text("Ongoing games")
-                        .font(.title3)
-                    ScrollView {
-                        VStack(spacing: 10) {
-                            ForEach(viewModel.activeGames) { activeGame in
-                                VStack(alignment: .leading) {
-                                    HStack(alignment: .firstTextBaseline) {
-                                        Text(activeGame.name)
-                                            .bold()
-                                        Spacer()
-                                        Text(activeGame.state.rawValue)
-                                            .font(.callout)
-                                            .foregroundStyle(.secondary)
-                                            .italic()
-                                    }
-                                    Text("\(activeGame.players.count) players")
-                                }
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .onTapGesture {
-                                    let gameConfig = GameConfig(
-                                        game: viewModel.game,
-                                        gameId: activeGame.name,
-                                        userConfig: viewModel.userConfig
-                                    )
-                                    openWindow(value: gameConfig)
-                                }
-                            }
-                        }
-                        .padding(.horizontal)
-                    }
-                }
-                .frame(maxWidth: .infinity)
-                VStack {
-                    Text("Ended games")
-                        .font(.title3)
-                    List {}
-                }
-                .frame(maxWidth: .infinity)
+        HStack {
+            getOnGoingGameView()
+            .frame(maxWidth: .infinity)
+            VStack {
+                Text("Ended games")
+                    .font(.title3)
+                List {}
             }
-            .padding(.top)
+            .frame(maxWidth: .infinity)
+        }
+        .padding(.top)
 
-            Button("Create game") {
-                Task {
-                    if let createdGame = await viewModel.createGame() {
-                        openWindow(value: createdGame)
-                    } else {
-                        // Show error
-                    }
+        Button("Create game") {
+            Task {
+                if let createdGame = await viewModel.createGame() {
+                    openWindow(value: createdGame)
+                } else {
+                    // Show error
                 }
             }
-            .padding()
-            .task {
-                while !Task.isCancelled {
-                    await viewModel.fetchGames()
-                    try? await Task.sleep(for: .seconds(1))
+        }
+        .padding()
+        .task {
+            while !Task.isCancelled {
+                await viewModel.fetchGames()
+                try? await Task.sleep(for: .seconds(1))
+            }
+        }
+    }
+    
+    func getOnGoingGameView() -> some View {
+        VStack {
+            Text("Ongoing games")
+                .font(.title3)
+            
+            ScrollView {
+                VStack(spacing: 10) {
+                    ForEach(viewModel.activeGames, id: \.self) { activeGame in
+                        VStack(alignment: .leading) {
+                            HStack(alignment: .firstTextBaseline) {
+                                Text(activeGame.name)
+                                    .bold()
+                                Spacer()
+                                Text(activeGame.state.rawValue)
+                                    .font(.callout)
+                                    .foregroundStyle(.secondary)
+                                    .italic()
+                            }
+                            Text("\(activeGame.players.count) players")
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .onTapGesture {
+                            let gameConfig = GameConfig(
+                                gameType: viewModel.gameType,
+                                userConfig: viewModel.userConfig,
+                                gameId: activeGame.name,
+                                players: activeGame.players
+                            )
+                            openWindow(value: gameConfig)
+                        }
+                    }
                 }
+                .padding(.horizontal)
             }
         }
     }
@@ -80,17 +84,17 @@ struct LobbyView: View {
 extension LobbyView {
     @Observable
     class ViewModel {
-        let game: Endpoint
+        let gameType: Endpoint
         let userConfig: UserConfig
         var activeGames = [DecksterGame]()
         private let lobbyClient: LobbyClient
 
-        init(game: Endpoint, userConfig: UserConfig) {
-            self.game = game
+        init(gameType: Endpoint, userConfig: UserConfig) {
+            self.gameType = gameType
             self.userConfig = userConfig
             lobbyClient = LobbyClient(
                 hostname: userConfig.host,
-                game: game,
+                gameType: gameType,
                 accessToken: userConfig.userModel.accessToken
             )
         }
@@ -99,10 +103,12 @@ extension LobbyView {
             do {
                 let createdGame = try await lobbyClient.createGame(name: "langsom avstand")
                 print(createdGame)
+                
                 return GameConfig(
-                    game: game,
+                    gameType: gameType,
+                    userConfig: userConfig,
                     gameId: createdGame.id,
-                    userConfig: userConfig
+                    players: []
                 )
             } catch {
                 print(error)
@@ -130,7 +136,7 @@ extension LobbyView {
         )
     )
     LobbyView(
-        game: .chatroom,
+        gameType: .chatroom,
         userConfig: userConfig
     )
 }

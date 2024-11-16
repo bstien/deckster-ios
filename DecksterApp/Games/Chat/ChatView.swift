@@ -1,7 +1,6 @@
 import SwiftUI
 import DecksterLib
 
-// Dårlig navn. Separarerte dette ut så vi kan lage previews av viewet uten å bruke nettverk.
 struct ChatView: View {
     @Binding var messageToSend: String
     let messages: [ChatMessage]

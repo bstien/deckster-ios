@@ -35,8 +35,7 @@ extension CrazyEightsView {
 #Preview {
     CrazyEightsView(
         gameConfig: GameConfig(
-            game: .chatroom,
-            gameId: "pønskende konge",
+            gameType: .chatroom,
             userConfig: UserConfig(
                 host: "localhost:13992",
                 userModel: UserModel(
@@ -44,7 +43,9 @@ extension CrazyEightsView {
                     username: "asdf",
                     accessToken: "a400a47dfd19457a823d854a90bcfc126de29624c56f40f7ac113004fed9a7ea"
                 )
-            )
+            ),
+            gameId: "CRAZY_EIGHTS",
+            players: []
         )
     )
     .frame(width: 800, height: 600)

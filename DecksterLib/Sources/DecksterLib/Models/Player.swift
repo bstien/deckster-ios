@@ -1,6 +1,6 @@
 import Foundation
 
-public struct Player: Decodable, Identifiable {
+public struct Player: Codable, Identifiable, Hashable {
     public let id: String
     public let name: String
     public let points: Int
