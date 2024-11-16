@@ -2,7 +2,7 @@ import SwiftUI
 import DecksterLib
 
 struct CrazyEightsSuitSelector: View {
-    var didSelectSuit: (Card.Suit) -> Void = { _ in }
+    var didSelectSuit: (Card.Suit) -> Void
 
     var body: some View {
         VStack(spacing: 20) {

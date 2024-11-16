@@ -37,6 +37,17 @@ struct CrazyEightsView: View {
                 .padding([.leading, .trailing, .top])
             }
         }
+        .overlay {
+            if let crazyEightCard = viewModel.crazyEightCard {
+                ZStack {
+                    Rectangle()
+                        .foregroundStyle(Color.gray.opacity(0.8))
+                    CrazyEightsSuitSelector(didSelectSuit: { newSuit in
+                        viewModel.sendAction(.putEight(card: crazyEightCard, newSuit: newSuit))
+                    })
+                }
+            }
+        }
         .task {
             await viewModel.connect()
         }
@@ -50,6 +61,7 @@ extension CrazyEightsView {
         let client: CrazyEights.Client
         var notificationTask: Task<Void, Never>?
 
+        var crazyEightCard: Card?
         var itIsYourTurn = false
         var currentSuit: Card.Suit?
         var yourCards = [Card]()
@@ -84,6 +96,7 @@ extension CrazyEightsView {
         }
 
         func sendAction(_ action: CrazyEights.Action) {
+            crazyEightCard = nil
             Task {
                 do {
                     let response = try await client.sendAction(action)
@@ -97,7 +110,7 @@ extension CrazyEightsView {
 
         func cardSelected(_ card: Card) {
             if card.rank == 8 {
-                sendAction(.putEight(card: card, newSuit: .diamonds))
+                crazyEightCard = card
             } else {
                 sendAction(.putCard(card: card))
             }
