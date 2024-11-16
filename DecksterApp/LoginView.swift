@@ -12,15 +12,28 @@ struct LoginView: View {
         } else {
             VStack {
                 TextField("Username", text: $viewModel.username)
-                TextField("Password", text: $viewModel.password)
-                TextField("Host", text: $viewModel.host)
-                Button("Login") {
-                    Task {
-                        await viewModel.login()
+                    .onSubmit {
+                        login()
                     }
+                TextField("Password", text: $viewModel.password)
+                    .onSubmit {
+                        login()
+                    }
+                TextField("Host", text: $viewModel.host)
+                    .onSubmit {
+                        login()
+                    }
+                Button("Login") {
+                    login()
                 }
             }
             .padding()
+        }
+    }
+    
+    func login() {
+        Task {
+            await viewModel.login()
         }
     }
 }
