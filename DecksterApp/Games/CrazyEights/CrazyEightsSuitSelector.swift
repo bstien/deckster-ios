@@ -27,18 +27,20 @@ struct CrazyEightsSuitSelector: View {
     }
 
     private func selector(for suit: Card.Suit) -> some View {
-        Text(suit.stringValue)
-            .foregroundStyle(suit.color)
-            .frame(width: 60, height: 60)
-            .clipShape(.rect(cornerRadius: 12))
-            .background {
-                RoundedRectangle(cornerRadius: 12)
-                    .fill(.white)
-                    .stroke(.black, lineWidth: 1)
+        Button {
+            didSelectSuit(suit)
+            } label: {
+                Text(suit.stringValue)
+                    .foregroundStyle(suit.color)
+                    .frame(width: 60, height: 60)
+                    .clipShape(.rect(cornerRadius: 12))
+                    .background {
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(.white)
+                            .stroke(.black, lineWidth: 1)
+                    }
             }
-            .onTapGesture {
-                didSelectSuit(suit)
-            }
+            .buttonStyle(.plain)
     }
 }
 
