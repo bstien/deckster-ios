@@ -3,6 +3,7 @@ import DecksterLib
 
 struct YourCardsView: View {
     let cards: [Card]
+    let cardSelected: (Card) -> Void
 
     var body: some View {
         ZStack {
@@ -14,6 +15,9 @@ struct YourCardsView: View {
                 HStack {
                     ForEach(cards, id: \.self) { card in
                         CardView(card: card)
+                            .onTapGesture {
+                                cardSelected(card)
+                            }
                     }
                 }
                 .padding(.bottom, -12)
@@ -32,7 +36,10 @@ struct YourCardsView: View {
 
     VStack {
         YourCardsView(
-            cards: cards
+            cards: cards,
+            cardSelected: {
+                print("Selected card \($0.displayValue)")
+            }
         )
 
         Button("Random card") {
