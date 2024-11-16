@@ -23,7 +23,7 @@ struct ChatView: View {
                             .padding()
                             .background(message.isYou ? .green.opacity(0.7) : .blue.opacity(0.7))
                             .clipShape(.rect(cornerRadius: 15))
-                            
+                        
                     }
                     .frame(maxWidth: .infinity, alignment: message.isYou ? .trailing : .leading)
                     .padding([.leading, .top, .trailing])
@@ -33,6 +33,12 @@ struct ChatView: View {
             
             HStack {
                 TextField("Message", text: $messageToSend)
+                    .onSubmit {
+                        if !messageToSend.isEmpty {
+                            sendMessageTapped(messageToSend)
+                            messageToSend = ""
+                        }
+                    }
 
                 Button("Send") {
                     sendMessageTapped(messageToSend)
