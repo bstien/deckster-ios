@@ -1,8 +1,8 @@
 import SwiftUI
 import DecksterLib
 
-struct LobbyView: View {
-    @State private var viewModel: ViewModel
+struct LobbyView<Notification: Decodable>: View {
+    @State private var viewModel: ViewModel<Notification>
     @Environment(\.openWindow) var openWindow
 
     init(gameType: Endpoint, userConfig: UserConfig) {
@@ -15,14 +15,10 @@ struct LobbyView: View {
     var body: some View {
         VStack {
             HStack {
-                getOnGoingGameView()
+                ongoingGames()
                     .frame(maxWidth: .infinity)
                 
-                VStack {
-                    Text("Ended games")
-                        .font(.title3)
-                    List {}
-                }
+                historicGames()
                 .frame(maxWidth: .infinity)
             }
             .frame(maxWidth: .infinity)
@@ -47,8 +43,59 @@ struct LobbyView: View {
         }
         .navigationTitle("\(viewModel.gameType.rawValue.capitalized) lobby")
     }
-    
-    func getOnGoingGameView() -> some View {
+
+    func historicGames() -> some View {
+        VStack {
+            Text("Ended games")
+                .font(.title3)
+
+            ScrollView {
+                VStack(spacing: 10) {
+                    ForEach(viewModel.activeGames, id: \.self) { activeGame in
+                        VStack(alignment: .leading) {
+                            HStack(alignment: .firstTextBaseline) {
+                                Text(activeGame.name)
+                                    .bold()
+                                Spacer()
+                                Text(activeGame.state.rawValue)
+                                    .font(.callout)
+                                    .foregroundStyle(.secondary)
+                                    .italic()
+                            }
+
+                            HStack {
+                                Text("\(activeGame.players.count) players")
+
+                                if isUserInGame(activeGame) {
+                                    Spacer()
+                                    Text("You've joined this game")
+                                        .font(.callout)
+                                        .foregroundStyle(.secondary)
+                                        .italic()
+                                }
+                            }
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .contentShape(Rectangle())
+                        .help(activeGame.players.map(\.name).joined(separator: ", "))
+                        .onTapGesture {
+                            if isUserInGame(activeGame) { return }
+                            let gameConfig = GameConfig(
+                                gameType: viewModel.gameType,
+                                userConfig: viewModel.userConfig,
+                                gameId: activeGame.name,
+                                players: activeGame.players
+                            )
+                            openWindow(value: gameConfig)
+                        }
+                    }
+                }
+                .padding(.horizontal)
+            }
+        }
+    }
+
+    func ongoingGames() -> some View {
         VStack {
             Text("Ongoing games")
                 .font(.title3)
@@ -106,11 +153,12 @@ struct LobbyView: View {
 
 extension LobbyView {
     @Observable
-    class ViewModel {
+    class ViewModel<T: Decodable> {
         let gameType: Endpoint
         let userConfig: UserConfig
         var activeGames = [DecksterGame]()
-        private let lobbyClient: LobbyClient
+        var historicGames = [HistoricGame<T>]()
+        private let lobbyClient: LobbyClient<T>
 
         init(gameType: Endpoint, userConfig: UserConfig) {
             self.gameType = gameType
@@ -142,6 +190,7 @@ extension LobbyView {
         func fetchGames() async {
             do {
                 activeGames = try await lobbyClient.getActiveGames()
+                historicGames = try await lobbyClient.getHistoricGames()
             } catch {
                 print(error)
             }
@@ -158,7 +207,7 @@ extension LobbyView {
             accessToken: "91e8cf5a891f4f98b2fc6f6804ec66bf19f2921dbc274b908ed1f008f1f97728"
         )
     )
-    LobbyView(
+    LobbyView<Chatroom.Notification>(
         gameType: .chatroom,
         userConfig: userConfig
     )

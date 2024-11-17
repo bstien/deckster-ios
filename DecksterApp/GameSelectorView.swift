@@ -12,14 +12,14 @@ struct GameSelectorView: View {
     
     var body: some View {
         HStack(spacing: 20) {
-            GameSelectorButton(
+            GameSelectorButton<Chatroom.Notification>(
                 icon: "💬",
                 label: "Chatroom",
                 gameType: .chatroom,
                 userConfig: userConfig
             )
             
-            GameSelectorButton(
+            GameSelectorButton<CrazyEights.Notification>(
                 icon: "🃈",
                 label: "Crazy 8s",
                 gameType: .crazyEights,
@@ -30,7 +30,7 @@ struct GameSelectorView: View {
     }
 }
 
-struct GameSelectorButton: View {
+struct GameSelectorButton<Notification: Decodable>: View {
     let icon: String
     let label: String
     let gameType: Endpoint
@@ -39,7 +39,7 @@ struct GameSelectorButton: View {
     var body: some View {
         NavigationLink(
             destination: {
-                LobbyView(
+                LobbyView<Notification>(
                     gameType: gameType,
                     userConfig: userConfig
                 )

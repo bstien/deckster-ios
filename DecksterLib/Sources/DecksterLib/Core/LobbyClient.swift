@@ -1,6 +1,6 @@
 import Foundation
 
-public final class LobbyClient {
+public final class LobbyClient<Notification: Decodable> {
     private let hostname: String
     private let gameType: Endpoint
     private let accessToken: String
@@ -30,6 +30,13 @@ public final class LobbyClient {
         let urlRequest = try URLRequest.create(urlString, accessToken: accessToken)
         let (data, _) = try await urlSession.data(for: urlRequest)
         return try JSONDecoder().decode([DecksterGame].self, from: data)
+    }
+
+    public func getHistoricGames() async throws -> [HistoricGame<Notification>] {
+        let urlString = "http://\(hostname)/\(gameType.rawValue)/previousgames"
+        let urlRequest = try URLRequest.create(urlString, accessToken: accessToken)
+        let (data, _) = try await urlSession.data(for: urlRequest)
+        return try JSONDecoder().decode([FailableDecodable<HistoricGame<Notification>>].self, from: data).compactMap(\.value)
     }
 }
 
